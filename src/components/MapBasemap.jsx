@@ -15,8 +15,9 @@ const MAPBOX_USER = 'rushadmin'
 const MAPBOX_STYLEID = 'clw2m6f9b018001obfxcc747g'
 const MAPBOX_TOKEN = 'pk.eyJ1IjoicnVzaGFkbWluIiwiYSI6ImNsdzJtYmRydzBuNDIyam5yZ2pwMG16cnUifQ.SkSSdHcrPq4u8HSitBvJcg'
 const API_URL = `https://api.mapbox.com/styles/v1/`
-const API_TILE_PATH = `${MAPBOX_USER}/${MAPBOX_STYLEID}/tiles/256/{z}/{x}/{y}@2x`
+const API_TILE_PATH = `${MAPBOX_USER}/${MAPBOX_STYLEID}/tiles/512/{z}/{x}/{y}@2x`
 const API_PARAMS = `?access_token=${MAPBOX_TOKEN}`
+// TODO: Put API token in auth header so it doesn't get leaked like this...
 
 export const MapBasemap = () => {
   const map = useMap()
@@ -26,6 +27,7 @@ export const MapBasemap = () => {
 
     // Add Satellite Basemap
     const basemap = L.tileLayer(
+      // See mapbox API's "Static Tiles" endpoint: https://docs.mapbox.com/api/maps/static-tiles/.
       API_URL + API_TILE_PATH + API_PARAMS,
       TILE_LAYER_OPTS
     )

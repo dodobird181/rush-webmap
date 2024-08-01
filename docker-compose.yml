@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: ./db
+    container_name: postgres-postgis
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: your_database
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: ./web
+      target: development
+    container_name: react-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - WDS_SOCKET_HOST=127.0.0.1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - db
+
+  web-prod:
+    build:
+      context: ./web
+      target: production
+    container_name: react-app-prod
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
