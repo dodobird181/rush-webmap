@@ -1,3 +1,15 @@
+###
+# Manually added gitignores.
+###
+
+scripts/.venv
+.vscode
+.env
+
+###
+# Auto-generated gitignores.
+###
+
 # Logs
 logs
 *.log
