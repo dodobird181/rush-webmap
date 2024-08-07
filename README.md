@@ -1,3 +1,11 @@
+# SAM TODO: Update this README.
+
+# What's The Rush Webapp
+Whatstherush.ca is all about rapid resillience in record time. The webapp, which you can view [here](whatstherush.ca), includes an interactive map with
+
+## For Developers
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
