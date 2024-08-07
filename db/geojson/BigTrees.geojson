@@ -1812,8 +1812,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          "",
-          ""
+          -123.41561,
+          48.62216
         ]
       },
       "properties": {
@@ -1987,27 +1987,6 @@
       "properties": {
         "id": 150,
         "tree_code": "A146",
-        "site_number": "",
-        "genus": "Quercus",
-        "species": "garryana",
-        "botanical_name": "Quercus garriana",
-        "common_name": "Garry Oak",
-        "CBH": 4.55,
-        "date_m": "29-Feb-16"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          "",
-          ""
-        ]
-      },
-      "properties": {
-        "id": 151,
-        "tree_code": "A147",
         "site_number": "",
         "genus": "Quercus",
         "species": "garryana",
