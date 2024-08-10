@@ -12,9 +12,6 @@ COPY upload_geojson.py /usr/local/bin/upload_geojson.py
 COPY geojson /geojson
 RUN chmod +x /usr/local/bin/upload_geojson.py /usr/local/bin/entrypoint.sh
 
-# TODO THIS IS A TEST LINE
-ENV PYTHONUNBUFFERED=0
-
 # set entrypoint and start postgres
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["postgres"]

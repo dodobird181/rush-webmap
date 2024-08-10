@@ -21,29 +21,17 @@ services:
     build:
       context: ./web
       target: development
-    container_name: react-app
+    container_name: next-app
     ports:
       - "3000:3000"
     volumes:
-      - ./web:/app
-      - /app/node_modules
+      - ./web/src:/app/src
+      - ./web/public:/app/public
     environment:
       - NODE_ENV=development
       - WDS_SOCKET_HOST=127.0.0.1
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
-    depends_on:
-      - db
-
-  web-prod:
-    build:
-      context: ./web
-      target: production
-    container_name: react-app-prod
-    ports:
-      - "80:80"
-    environment:
-      - NODE_ENV=production
     depends_on:
       - db
 
