@@ -2,14 +2,16 @@ import React from 'react';
 import {
   Box,
   Image,
+  useBreakpoint,
 } from '@chakra-ui/react';
 import { useActiveQuestionStore } from '../data/Questions';
 import { TutorialPopupQuote } from '../data/TextContent';
 
 export default function TutorialPopup() {
   const activeQuestion = useActiveQuestionStore(state => state.activeQuestion)
+  const isMobile = ['base', 'sm'].includes(useBreakpoint());
 
-  return activeQuestion === undefined
+  return activeQuestion === undefined && !isMobile
     ? (
         <Box
           position='absolute'

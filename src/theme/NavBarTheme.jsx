@@ -27,7 +27,7 @@ const NavBar = helpers.defineMultiStyleConfig({
       fontWeight: 'extrabold',
       strokeWidth: '0.25em',
       color: 'orange.500',
-    }
+    },
   },
 })
 

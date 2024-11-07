@@ -1,5 +1,16 @@
 import { createMultiStyleConfigHelpers } from "@chakra-ui/styled-system"
 
+export const mobileStyle = (mobileCss, fallbackCss) => {
+  return {
+    base: mobileCss, // iphone SE
+    sm: mobileCss, // android
+    md: fallbackCss, // ipad mini
+    lg: fallbackCss, // ipad pro
+    xl: fallbackCss, // macbook air
+    '2xl': fallbackCss, // desktop
+  };
+};
+
 const containerGradient = [
   'linear-gradient(to left,',
   'hsla(0, 0%, 0%, 0.8) 0%,',
@@ -28,9 +39,12 @@ const helpers = createMultiStyleConfigHelpers([
 const QuestionCardBarTheme = helpers.defineMultiStyleConfig({
   baseStyle: {
     bar: {
+      backgroundColor: mobileStyle('white', 'transparent'),
       display: 'flex',
       flexDirection: 'column',
-      paddingStart: '10px',
+      justifyItems: 'center',
+      justifyContent: 'center',
+      paddingStart: mobileStyle('0', '10px'),
       paddingY: '10px',
       gap: '10px',
       transform: 'scaleX(-1)', //Flips the child back to normal
@@ -45,20 +59,21 @@ const QuestionCardBarTheme = helpers.defineMultiStyleConfig({
         alignSelf: 'flex-start',
         position: 'sticky',
         top: '0.625rem',
-        zIndex: '10',
+        zIndex: '1001',
+        display: 'block',
       }
     },
     container: {
       transform: 'scaleX(-1)', //Reflects the parent horizontally
       height: 'calc(100% - 40px)',
-      minWidth: '140px',
+      minWidth: mobileStyle('100%', '140px'),
       overflow: 'scroll',
       //background: 'transparent',
       position:'absolute',
       top:'2.5rem',
       zIndex:'9',
       pointerEvents: 'none',
-      background: containerGradient,
+      background: mobileStyle('none', containerGradient), // hide container gradient on mobile
     }
   },
   defaultProps: {

@@ -98,10 +98,13 @@ function WebMap() {
   const { question, zoom, center } = validateParams(params);
 
   // Active Question State
-  const { activeQuestion, setActiveQuestion } = useActiveQuestionStore((state) => ({activeQuestion: state.activeQuestion, setActiveQuestion: state.setActiveQuestion}))
+  const { activeQuestion, setActiveQuestion } = useActiveQuestionStore((state) => ({
+    activeQuestion: state.activeQuestion, 
+    setActiveQuestion: state.setActiveQuestion,}
+  ))
   useEffect(() => {
-    setActiveQuestion(question)
-  }, [ params, question, setActiveQuestion ])
+    setActiveQuestion(question);
+  }, [ question, setActiveQuestion ])
 
   // Leaflet map reference
   const map = useRef(null);
