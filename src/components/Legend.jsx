@@ -29,7 +29,13 @@ import { IoMdInformationCircle, IoMdCloseCircleOutline } from 'react-icons/io';
 import { FiX } from "react-icons/fi";
 import FormattedText from './FormattedText';
 import useScrollShadows from './useScrollShadows';
-import { useMapLayerStore, LOADING, useActiveQuestionStore } from '../data/Questions';
+import { useActiveQuestionStore } from '../data/QuestionStore';
+import {
+  LAYER_STATUS,
+  layerMap,
+  useMapLayerDataStore,
+  useMapLayerStyleStore,
+} from '../data/MapLayerStore';
 import { LegendGroups } from '../data/TextContent';
 
 // Wraps Legend in a Box for large screen sizes.
@@ -82,7 +88,7 @@ export const LegendDrawerButton = () => {
   )
   const { isOpen, onOpen, onClose } = useDisclosure({defaultIsOpen: !isDrawer});
   const btnRef = useRef();
-  const layersLoading = useMapLayerStore((state) => state.layersLoading());
+  const layersLoading = useMapLayerDataStore((state) => state.areLayersLoading());
   const activeQuestion = useActiveQuestionStore(state => state.activeQuestion)
 
   return activeQuestion === undefined
@@ -169,25 +175,23 @@ const LegendHeader = () => {
 // LegendList Component
 //   Builds list of LegendItem components for active question layers.
 const LegendList = () => {
-  const activeQuestion = useActiveQuestionStore(state => state.activeQuestion)
-  // Get all layers
-  const layers = useMapLayerStore((state) => state.layers);
+  const [activeQuestion, activeLayers] = useActiveQuestionStore(state => 
+    [state.activeQuestion, state.activeLayers]
+  )
 
   // Start empty map for all legend groups
   const legendEntries = new Map();
   
-  [...layers.entries()]
-    .filter(([key, layer]) => !layer.noLegend && 
-      layer.questions?.some((q) => q.key === activeQuestion))
-    .forEach(([key, layer]) => {
-      const legendGroup = layer.questions.find((q) => q.key === activeQuestion).group;
-      const groupEntries = legendEntries.get(legendGroup) ?? [];
+  activeLayers
+    .filter((layer) => !layerMap.get(layer.key).noLegend)
+    .forEach(({key, group}) => {
+      const groupEntries = legendEntries.get(group) ?? [];
       groupEntries.push(
-        layer?.ogmMapId
-        ? <LegendItemOGM key={key} layerId={key} question={activeQuestion} mb={1} />
+        layerMap.get(key)?.ogmMapId
+        ? <LegendItemOGM key={key} layerId={key} mb={1} />
         : <LegendItem key={key} layerId={key} question={activeQuestion} mb={1} />
       );
-      legendEntries.set(legendGroup, groupEntries);
+      legendEntries.set(group, groupEntries);
     });
   
   // Make array with groups that have special positions
@@ -223,13 +227,13 @@ const LegendGroup = ({ title, children }) => {
 //   A single legend entry row with toggle, name, patch, and learn more button.
 export const LegendItem = ({ layerId, question }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const layer = useMapLayerStore((state) => state.layers.get(layerId));
-  const toggleLayerActive = useMapLayerStore((state) => state.toggleLayerActive);
+  const layerStatus = useMapLayerDataStore((state) => state.layerDataMap.get(layerId).status);
+  const [activeLayers, toggleLayerActive] = useActiveQuestionStore((state) => [state.activeLayers, state.toggleLayerActive]);
 
   return (
     <>
       <Flex direction='row' alignItems='center' gap={2} width='100%'>
-        {layer.leafletLayer === LOADING
+        {layerStatus === LAYER_STATUS.Loading
           ? <Spinner
               color='blue.500'
               emptyColor='gray.200'
@@ -238,8 +242,8 @@ export const LegendItem = ({ layerId, question }) => {
               marginInline='5px'
             />
           : <Switch
-              isChecked={layer.questions.some((q) => q.key === question && q.active === true)}
-              onChange={() => toggleLayerActive(layerId, question)}
+              isChecked={activeLayers.find(l => l.key === layerId).active === true}
+              onChange={() => toggleLayerActive(layerId)}
               flex='0'
             />
         }
@@ -253,7 +257,7 @@ export const LegendItem = ({ layerId, question }) => {
           whiteSpace='normal'
           fontFamily='var(--chakra-fonts-title)'
           fontSize='md'
-        >{layer.leafletLayer === LOADING ? 'Loading...' : layer.title}</FormLabel>
+        >{layerStatus === LAYER_STATUS.Loading ? 'Loading...' : layerMap.get(layerId).title}</FormLabel>
         <LegendPatch layerId={layerId} flex='0' />
         <IconButton
           variant='ghost'
@@ -272,8 +276,8 @@ export const LegendItem = ({ layerId, question }) => {
 }
 
 const LegendItemDetails = ({ layerId }) => {
-  const layer = useMapLayerStore((state) => state.layers.get(layerId))
-  const styleMap = useMapLayerStore((state) => state.getLayerStyleMap(layerId))
+  const layer = layerMap.get(layerId)
+  const styleMap = useMapLayerStyleStore((state) => state.getLayerStyleMap(layerId))
 
   return (
     <Flex direction='column' gap='2' my='2' marginInlineStart='3' mb='3'>
@@ -281,7 +285,7 @@ const LegendItemDetails = ({ layerId }) => {
       <Flex direction='column' gap='1' mx='2' p='2' bgColor='gray.100' borderRadius='lg'>
         {layer.legendTitle ? <Heading size='sm'>{layer.legendTitle}</Heading> : null }
         {[...styleMap.entries()].map(([key, val]) => 
-          <Flex key={val?.legendText ?? key} direction='row' alignItems='center' >
+          <Flex key={key} direction='row' alignItems='center' >
             { layer.shape === 'point'
                 ? <SinglePatchPoint style={val} flex='0' />
                 : layer.shape === 'line'
@@ -313,8 +317,8 @@ const LegendItemDescription = ({ description, noOfLines = undefined }) => {
 
 // Legend Patch Components
 const LegendPatch = ({ layerId }) => {
-  const layer = useMapLayerStore((state) => state.layers.get(layerId))
-  const styleMap = useMapLayerStore((state) => state.getLayerStyleMap(layerId))
+  const layer = layerMap.get(layerId)
+  const styleMap = useMapLayerStyleStore((state) => state.getLayerStyleMap(layerId))
 
   if (layer.symbology === 'classified') {
     return layer.shape === 'point' ? (
@@ -396,7 +400,7 @@ const ClassifiedPatchPolygon = ({ styleMap }) => {
     <HStack spacing='0'>
       {styles.map(([key, style]) => {
         return (
-          <div key={style.legendText ?? key} style={{
+          <div key={key} style={{
             width: (45 / styles.length) + 'px',
             height: '27px',
             background: style.fillColor ?? style.color ?? '#BBB'
@@ -438,16 +442,17 @@ const LinePatchSVG = ({ fill, stroke, dashed = false }) => (
 
 // LegendItemOGM Component
 //   A single legend entry row for an OpenGreenMap layer.
-export const LegendItemOGM = ({ layerId, question }) => {
+export const LegendItemOGM = ({ layerId }) => {
   const { isOpen, onToggle } = useDisclosure();
-  const layer = useMapLayerStore((state) => state.layers.get(layerId));
-  const toggleLayerActive = useMapLayerStore((state) => state.toggleLayerActive);
-  const active = layer.questions.some((q) => q.key === question && q.active === true)
+  const layerStatus = useMapLayerDataStore((state) => state.layerDataMap.get(layerId).status);
+  const layer = layerMap.get(layerId);
+  const [activeLayers, toggleLayerActive] = useActiveQuestionStore((state) => [state.activeLayers, state.toggleLayerActive]);
+  const active = activeLayers.find(l => l.key === layerId).active
 
   const [mapName, setMapName] = useState(layer.title)
   const [team, setTeam] = useState({ name: '', id: null, src: require('../data/png/Placeholder.png') })
   useEffect(() => {
-    if (!layer?.ogmMapId) return;
+    if (!layer?.ogmMapId || team.id !== null) return;
 
     // Fetch OGM Team Image
     fetch(`https://new.opengreenmap.org/api-v1/maps/${layer.ogmMapId}`)
@@ -457,6 +462,7 @@ export const LegendItemOGM = ({ layerId, question }) => {
         const resMapName = json.map?.name
         if (resMapName) setMapName(resMapName)
         if (teamId) {
+          setTeam({ name: 'Loading...', id: 'loading', src: team.src })
           fetch(`https://new.opengreenmap.org/api-v1/teams/${teamId}`)
             .then((response) => response.json())
             .then((json) => {
@@ -467,6 +473,12 @@ export const LegendItemOGM = ({ layerId, question }) => {
                   name: teamName,
                   id: teamId,
                   src: `https://new.opengreenmap.org/api-v1/pictures/${teamLogoId}/picture`
+                })
+              } else {
+                setTeam({
+                  name: '',
+                  id: 'error',
+                  src: team.src
                 })
               }
             })
@@ -482,13 +494,12 @@ export const LegendItemOGM = ({ layerId, question }) => {
       padding='8px'
       bgColor='gray.100'
       borderRadius='xl'
-      boxShadow={isOpen ? undefined : 'inset 0px -24px 16px -16px hsla(0,0%,0%,.25)'}
     >
       {/* Map icons and toggle */}
       <Flex direction='row' alignItems='center' justifyContent='space-between'>
         <LegendPatch layerId={layerId} flex='0' />
         <Spacer />
-        {layer.leafletLayer === LOADING
+        {layerStatus === LAYER_STATUS.Loading
           ? <Spinner
               color='blue.500'
               emptyColor='gray.200'
@@ -498,7 +509,7 @@ export const LegendItemOGM = ({ layerId, question }) => {
             />
           : <Switch
               isChecked={active}
-              onChange={(e) => toggleLayerActive(layerId, question)}
+              onChange={(e) => toggleLayerActive(layerId)}
             >{ active ? 'On' : 'Off' }</Switch>
         }
       </Flex>
@@ -506,7 +517,7 @@ export const LegendItemOGM = ({ layerId, question }) => {
       <Flex direction='row' alignItems='bottom' justifyContent='space-between'>
         <Flex direction='column' alignItems='left' justifyContent='flex-end'>
           <Link
-            href={`https://new.opengreenmap.org/browse/teams/${team.id}`}
+            href={layer.liveOverride?.team?.url ?? `https://new.opengreenmap.org/browse/teams/${team.id}`}
             isExternal
           >
             <Text
@@ -515,7 +526,7 @@ export const LegendItemOGM = ({ layerId, question }) => {
               fontWeight='light'
               noOfLines={1}
             >
-              {team.name}
+              {layer.liveOverride?.team?.name ?? team.name}
             </Text>
           </Link>
           <Text
@@ -527,14 +538,19 @@ export const LegendItemOGM = ({ layerId, question }) => {
             {mapName}
           </Text>
         </Flex>
-        <Image
-          boxSize='100px'
-          objectFit='contain'
-          bgColor='white'
-          borderRadius='xl'
-          alt={team?.name ?? ''}
-          src={team?.src ?? ''}
-        />
+        <Link
+          href={layer.liveOverride?.team?.url ?? `https://new.opengreenmap.org/browse/teams/${team.id}`}
+          isExternal
+        >
+          <Image
+            boxSize='100px'
+            objectFit='contain'
+            bgColor='white'
+            borderRadius='xl'
+            alt={team?.name ?? ''}
+            src={team?.src ?? ''}
+          />
+        </Link>
       </Flex>
       {/* Description */}
       <Tooltip
@@ -544,28 +560,36 @@ export const LegendItemOGM = ({ layerId, question }) => {
         hasArrow
         isDisabled={isOpen}
       >
-        <Box onClick={onToggle}>
+        <Box
+          onClick={onToggle}
+          paddingBottom={isOpen ? 'unset' : '0.75em'}
+          boxShadow={isOpen ? undefined : 'inset 0px -24px 16px -16px hsla(0,0%,0%,.25)'}
+        >
           <LegendItemDescription
             description={layer.description}
             noOfLines={isOpen ? undefined : 2}
           />
         </Box>
       </Tooltip>
-      { isOpen ? (
+      { true || isOpen ? (
         <Flex direction='row' justifyContent='space-around' >
           <Link
-            href={`https://new.opengreenmap.org/browse/sites?map=${layer?.ogmMapId}`}
+            href={layer.liveOverride?.btn1?.url ?? `https://new.opengreenmap.org/browse/sites?map=${layer?.ogmMapId}`}
             isExternal
           >
-            <Button colorScheme='green'>Visit Campaign</Button>
+            <Button colorScheme='green'>{layer.liveOverride?.btn1?.label ?? 'Visit Campaign'}</Button>
           </Link>
           <Link
-            href={`https://new.opengreenmap.org/manage/features/add?mapId=${layer?.ogmMapId}`}
+            href={layer.liveOverride?.btn2?.url ?? `https://new.opengreenmap.org/manage/features/add?mapId=${layer?.ogmMapId}`}
             isExternal
           >
-            <Tooltip label='Will Require OpenGreenMap Account' placement='top' bg='orange.600' hasArrow>
-              <Button colorScheme='green' >Add a Feature</Button>
-            </Tooltip>
+            { layer.liveOverride?.ogmNoAccountWarning ? (
+              <Button colorScheme='green' >{layer.liveOverride?.btn2?.label ?? 'Add a Feature'}</Button>
+            ) : (
+              <Tooltip label='Will Require OpenGreenMap Account' placement='top' bg='orange.600' hasArrow>
+                <Button colorScheme='green' >{layer.liveOverride?.btn2?.label ?? 'Add a Feature'}</Button>
+              </Tooltip>
+            )}
           </Link>
         </Flex>
       ) : null }

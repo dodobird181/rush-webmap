@@ -22,7 +22,7 @@ import { latLng } from 'leaflet';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 // Questions
-import Questions, { useActiveQuestionStore } from './data/Questions';
+import Questions, { useActiveQuestionStore } from './data/QuestionStore';
 import { PlacesAutocomplete } from './components/PlacesAutocomplete'; // eslint-disable-line no-unused-vars
 import Sandbox from './components/Sandbox';
 import QuestionCardBar from './components/QuestionCardBar';
@@ -30,6 +30,7 @@ import HomePage from './components/HomePage';
 import ContentInitiativeContainer from './components/ContentInitiativeContainer';
 import RabbitHoleDrawer from './components/RabbitHoleDrawer';
 import TutorialPopup from './components/TutorialPopup';
+import AboutPage from './components/AboutPage';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -55,6 +56,10 @@ function App() {
           <Route
             path="/"
             element={<HomePage />}
+          />
+          <Route
+            path="/about"
+            element={<AboutPage />}
           />
           <Route
             path="/app"

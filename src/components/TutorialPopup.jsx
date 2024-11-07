@@ -4,7 +4,7 @@ import {
   Image,
   useBreakpoint,
 } from '@chakra-ui/react';
-import { useActiveQuestionStore } from '../data/Questions';
+import { useActiveQuestionStore } from '../data/QuestionStore';
 import { TutorialPopupQuote } from '../data/TextContent';
 
 export default function TutorialPopup() {

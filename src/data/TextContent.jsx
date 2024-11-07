@@ -1,12 +1,12 @@
-export const AboutPageButtonLabel = 'Get Started'
-export const AboutPageTitle = 'Welcome to the RUSH'
-export const AboutPageTitleLong = 'Welcome to the RUSH Initiative Web Map'
-export const AboutPageSubTitle = 'Climate change is a real bummer but reversing the trend is at our fingertips and in our footprints. The Resilient Urban Systems & Habitat (RUSH) Initiative is about rapid resilience in record time.'
-export const AboutPageBody = [
+export const HomePageButtonLabel = 'Get Started'
+export const HomePageTitle = 'Welcome to the RUSH'
+export const HomePageTitleLong = 'Welcome to the RUSH Initiative Web Map'
+export const HomePageSubTitle = 'Climate change is a real bummer but reversing the trend is at our fingertips and in our footprints. The Resilient Urban Systems & Habitat (RUSH) Initiative is about rapid resilience in record time.'
+export const HomePageBody = [
   'Join this collective creation to mapping the difference we’re all making. Comparing datasets on personal and planetary health. Help us plot the spots that track the healing. Help identify the risks and the fixes.',
   'The RUSH Initiative is exploring this work on the unceded and unsurrendered territories of the lək̓ʷəŋən and SENĆOŦEN speaking peoples. Maps have a long history of erasure of Indigenous cultures and territories. Our goal is to promote tools that support the healing of ecosystems and communities so that all beings can live their best life.',
 ]
-export const AboutPageQuote = 'Choose a question. Consider the data. Find the people and solutions that werk for you.'
+export const HomePageQuote = 'Choose a question. Consider the data. Find the people and solutions that werk for you.'
 
 export const AboutPageText = [
   {type: 'p', content: 'The RUSH Initiative is exploring this work on the unceded and unsurrendered territories of the lək̓ʷəŋən and SENĆOŦEN speaking peoples. Maps have a long history of erasure of Indigenous cultures and territories. Our goal is to promote tools that support the healing of ecosystems and communities as a way to practice reconciliation, gratitude, and respect.'},
@@ -21,4 +21,40 @@ export const LegendGroups = {
   StartOn: { group: 'Starting Place', position: 0, subheading: undefined },
   StartOff: { group: 'Deeper Connections', position: 1, subheading: undefined},
   OGM: { group: 'Plot that Spot', position: 9999, subheading: 'Connect the call to action by joining these community mapping projects powered by OpenGreenMap.' },
+}
+
+export const InitiativeTags = {
+  StoryMap: 'StoryMap',
+  Report: 'Report',
+  Organization: 'Organization',
+  Business: 'Business',
+  Indigenous: 'Indigenous',
+  Map: 'Map',
+  Agreement: 'Agreement',
+  Target: 'Target',
+  Initiative: 'Initiative',
+  Program: 'Program',
+  Portal: 'Info Portal',
+  Funding: 'Funding',
+  Government: 'Government',
+  Video: 'Video',
+  Infographic: 'Infographic',
+}
+
+export const InitiativeTagColors = {
+  Organization: 'blue',
+  Business: 'blue',
+  Initiative: 'cyan',
+  Program: 'cyan',
+  Government: 'red',
+  Indigenous: 'orange',
+  Funding: 'green',
+  Report: 'gray',
+  Agreement: 'teal',
+  Target: 'red',
+  StoryMap: 'purple',
+  Map: 'purple',
+  Video: 'pink',
+  Infographic: 'yellow',
+  'Info Portal': 'yellow',
 }

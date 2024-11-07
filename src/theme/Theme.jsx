@@ -134,8 +134,17 @@ const theme = extendTheme({
         fontSize: '16px'
       },
       '.leaflet-left': {
-        left: '8.125rem'
+        left: '9.125rem'
       },
+      '.leaflet-label': {
+        padding: 0,
+        backgroundColor: 'transparent',
+        border: 'unset',
+        boxShadow: 'unset',
+        fontSize: '1.0rem',
+        textShadow: '#FFF 2px 2px 4px, #FFF -2px 2px 4px, #FFF 2px -2px 4px, #FFF -2px -2px 4px;',
+        opacity: '0.8 !important',
+      }
     }
   },
   colors: {

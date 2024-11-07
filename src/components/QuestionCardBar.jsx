@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Box, useBreakpoint, useMultiStyleConfig } from '@chakra-ui/react';
 import QuestionCard from './QuestionCard';
-import Questions, { useActiveQuestionStore } from '../data/Questions';
+import Questions, { useActiveQuestionStore } from '../data/QuestionStore';
 
 /**
  * The possible states that the menu on mobile versions can be in.

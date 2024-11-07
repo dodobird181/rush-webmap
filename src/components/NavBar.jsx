@@ -9,8 +9,7 @@ import {
   useBreakpointValue,
   useMultiStyleConfig,
 } from '@chakra-ui/react';
-import { FiInstagram, FiMessageSquare, FiMenu, FiMap } from 'react-icons/fi';
-import LandingModalButton from './LandingModalButton';
+import { FiInstagram, FiMessageSquare, FiMap } from 'react-icons/fi';
 import ShareModalButton from './ShareModalButton';
 
 export default function NavBar(props) {
@@ -81,10 +80,12 @@ export default function NavBar(props) {
             label={navLabels?.share}
             getShareURL={getShareURL}
           />
-          <LandingModalButton
-            label={navLabels?.about}
-            vh={props.vh}
-          />
+          <ReactLink to='/about'>
+            <Button
+              rightIcon={<FiHelpCircle strokeWidth='inherit' />}
+              fontWeight='inherit'
+            >{navLabels?.about}</Button>
+          </ReactLink>
         </ButtonGroup>
       </Box>
     </Box>
