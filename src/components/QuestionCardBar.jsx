@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Box, useBreakpoint, useMultiStyleConfig } from '@chakra-ui/react';
+import { Box, useMultiStyleConfig } from '@chakra-ui/react';
 import QuestionCard from './QuestionCard';
 import Questions, { useActiveQuestionStore } from '../data/QuestionStore';
 

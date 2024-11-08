@@ -33,6 +33,7 @@ import RabbitHoleDrawer from './components/RabbitHoleDrawer';
 import TutorialPopup from './components/TutorialPopup';
 import AboutPage from './components/AboutPage';
 import MobileQuestionMenu from './components/mobile/MobileQuestionMenu';
+import MobileQuestionDock from './components/mobile/MobileQuestionDock';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -183,6 +184,12 @@ function WebMap() {
           <MapBasemap />
           <MapData />
         </MapView>
+        <MobileQuestionDock
+          isMobile={isMobile}
+          activeQuestion={activeQuestion}
+          mobileMenuState={mobileMenuState}
+          setMobileMenuState={setMobileMenuState}
+        />
         <TutorialPopup />
       </Flex>
       <ContentInitiativeContainer />

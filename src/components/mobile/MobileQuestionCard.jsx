@@ -1,15 +1,15 @@
-import React, {useRef} from 'react'
+import React from 'react'
 import {
   Box,
   Button,
   IconButton,
   Image,
-  useBreakpoint,
   useMultiStyleConfig
 } from '@chakra-ui/react'
 import { FaRegArrowAltCircleDown } from 'react-icons/fa'
 import { FiX } from 'react-icons/fi'
 import { questionActions, useActiveQuestionStore } from '../../data/Questions'
+import { MobileMenuState } from '../../App'
 
 
 /**
@@ -18,30 +18,24 @@ import { questionActions, useActiveQuestionStore } from '../../data/Questions'
  */
 export default function MobileQuestionCard({ question, size, variant, mobileMenuState, setMobileMenuState }){
 
-    // hack for long title strings
-    const longTitleStyle = size === 'wide' && question.title?.length > 22
-        ? { fontSize: '1.125rem', lineHeight: '1.95rem'}
-        : {}
+  // hack for long title strings
+  const longTitleStyle = () => {
+    if ('wide' === size && question.title?.length > 22){
+        return { fontSize: '1.125rem', lineHeight: '1.95rem' };
+    }
+    return {};
+  };
   
   const styles = useMultiStyleConfig('QuestionCard', { size, variant }); // re-use theme from original question card
   const dispatch = useActiveQuestionStore(state => state.dispatch);
+
+  const onCardClick = () => {
+    setMobileMenuState(MobileMenuState.COLLAPSED_HEADER);
+  };
+
   
   return question.key && (
-    <Box
-        __css={styles.card}
-        onClick={() => {
-            // Handle resizing / changing the question display
-            switch (size) {
-            case 'button':
-                dispatch({question: question.key})
-            case 'wide':
-                dispatch({question: question.key, focus: questionActions.open})
-                return
-            default:
-                return
-            }
-        }}
-    >
+    <Box __css={styles.card} onClick={onCardClick}>
       <Image src={question.image} __css={styles.image} />
       <Box __css={styles.content}>
         <IconButton
