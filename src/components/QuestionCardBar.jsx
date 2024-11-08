@@ -1,22 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Box, useBreakpoint, useMultiStyleConfig } from '@chakra-ui/react';
 import QuestionCard from './QuestionCard';
 import Questions, { useActiveQuestionStore } from '../data/QuestionStore';
 
-/**
- * The possible states that the menu on mobile versions can be in.
- */
-export const MobileMenuState = {
-  SELECT: 'select_a_question',
-  COLLAPSED_HEADER: 'question_header_is_collapsed',
-  EXPANDED_HEADER: 'question_header_is_expanded',
-};
 
-
-export default function QuestionCardBar() {
-  const [mobileMenuState, setMobileMenuState] = useState(MobileMenuState.SELECT);
+export default function QuestionCardBar({isMobile}) {
   const styles = useMultiStyleConfig('QuestionCardBar');
-  const isMobile = ['base', 'sm'].includes(useBreakpoint());
   const {
     activeQuestion,
     sectionFocus,
@@ -25,8 +14,12 @@ export default function QuestionCardBar() {
     sectionFocus: state.sectionFocus
   }))
   const scrollRef = useRef(null);
+
+  const shouldRender = () => {
+    return !isMobile;
+  };
   
-  return (
+  return shouldRender() && (
     <Box __css={styles.container} ref={scrollRef}>
       <Box __css={styles.bar}>
         <QuestionCard
@@ -38,12 +31,10 @@ export default function QuestionCardBar() {
             : 'wide'
           }
           variant='sticky'
-          mobileMenuState={mobileMenuState}
-          setMobileMenuState={setMobileMenuState}
         />
         {
           [...Questions.entries()]
-          .filter(q => q[0] !== activeQuestion && mobileMenuState === MobileMenuState.SELECT || isMobile === false)
+          .filter(q => q[0] !== activeQuestion)
           .map(q => {
             return (
               <QuestionCard
@@ -51,8 +42,6 @@ export default function QuestionCardBar() {
                 question={{key: q[0], ...q[1]}}
                 size={(isMobile ? 'wide' : 'button')}
                 scrollRef={scrollRef}
-                mobileMenuState={mobileMenuState}
-                setMobileMenuState={setMobileMenuState}
               />
             )
           })

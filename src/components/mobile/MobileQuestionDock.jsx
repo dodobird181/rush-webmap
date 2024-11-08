@@ -1,34 +1,21 @@
 import React, { useRef, useState } from 'react';
 import { Box, useBreakpoint, useMultiStyleConfig } from '@chakra-ui/react';
-import QuestionCard from './QuestionCard';
-import Questions, { useActiveQuestionStore } from '../data/Questions';
+import QuestionCard from '../QuestionCard';
+import Questions, { useActiveQuestionStore } from '../../data/Questions';
 
 /**
- * The possible states that the menu on mobile versions can be in.
+ * Dock the active question to the bottom of the screen on mobile devices.
+ * TODO: Describe what happened with the bottom menu tabs switching between information.
  */
-export const MobileMenuState = {
-  SELECT: 'select_a_question',
-  COLLAPSED_HEADER: 'question_header_is_collapsed',
-  EXPANDED_HEADER: 'question_header_is_expanded',
-};
+export default MobileQuestionDock = ({isMobile, activeQuestion, mobileMenuState, setMobileMenuState}) => {
+  const styles = useMultiStyleConfig('MobileQuestionDock');
 
-
-export default function QuestionCardBar() {
-  const [mobileMenuState, setMobileMenuState] = useState(MobileMenuState.SELECT);
-  const styles = useMultiStyleConfig('QuestionCardBar');
-  const isMobile = ['base', 'sm'].includes(useBreakpoint());
-  const {
-    activeQuestion,
-    sectionFocus,
-  } = useActiveQuestionStore(state => ({
-    activeQuestion: state.activeQuestion,
-    sectionFocus: state.sectionFocus
-  }))
-  const scrollRef = useRef(null);
+  const shouldRender = () => {
+    
+  };
   
   return (
-    <Box __css={styles.container} ref={scrollRef}>
-      <Box __css={styles.bar}>
+    <Box __css={styles.container}>
         <QuestionCard
           key={activeQuestion}
           question={{key: activeQuestion, ...Questions.get(activeQuestion)}}
@@ -46,7 +33,7 @@ export default function QuestionCardBar() {
           .filter(q => q[0] !== activeQuestion && mobileMenuState === MobileMenuState.SELECT || isMobile === false)
           .map(q => {
             return (
-              <QuestionCard
+              <MobileQuestionCard
                 key={q[0]}
                 question={{key: q[0], ...q[1]}}
                 size={(isMobile ? 'wide' : 'button')}
@@ -57,7 +44,6 @@ export default function QuestionCardBar() {
             )
           })
         }
-      </Box>
     </Box>
   )
 }

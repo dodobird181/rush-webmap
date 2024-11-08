@@ -9,7 +9,7 @@ import {
   useBreakpointValue,
   useMultiStyleConfig,
 } from '@chakra-ui/react';
-import { FiInstagram, FiMessageSquare, FiMap } from 'react-icons/fi';
+import { FiInstagram, FiMessageSquare, FiMap, FiHelpCircle } from 'react-icons/fi';
 import ShareModalButton from './ShareModalButton';
 
 export default function NavBar(props) {

@@ -1,4 +1,4 @@
-import { defineStyleConfig, extendTheme, useBreakpointValue } from '@chakra-ui/react';
+import { defineStyleConfig, extendTheme } from '@chakra-ui/react';
 import '@fontsource-variable/aleo';
 import '@fontsource-variable/figtree';
 import '@fontsource-variable/inter';
