@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Input, useBreakpointValue } from '@chakra-ui/react';
+import { Input, useBreakpoint, useBreakpointValue } from '@chakra-ui/react';
 import { latLng, latLngBounds, marker } from 'leaflet';
 import { useMap } from 'react-leaflet';
 import Control from 'react-leaflet-custom-control';
@@ -21,6 +21,7 @@ export const PlacesAutocomplete = () => {
   const map = useMap()
   const inputRef = useRef(null)
   const [ autocomplete, setAutocomplete ] = useState(null);
+  const isMobile = ['base', 'sm'].includes(useBreakpoint());
   
   useEffect(() => {
     let ignore = false
@@ -124,6 +125,7 @@ export const PlacesAutocomplete = () => {
         width={inputWidth}
         marginStart='-0.875rem'
         borderRadius='xl'
+        hidden={isMobile}
         bgColor='gray.100'
         fontFamily='var(--chakra-fonts-body)'
         placeholder={placeholderText}

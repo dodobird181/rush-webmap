@@ -5,6 +5,7 @@ import Control from 'react-leaflet-custom-control';
 
 // Constants
 const TILE_LAYER_OPTS = {
+  // Use this to center the attribution on mobile...
   minZoom: 0,
   maxZoom: 22,
   updateWhenIdle: true,

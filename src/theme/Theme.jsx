@@ -26,6 +26,16 @@ import ContentPane from './ContentPaneTheme';
 import ContentInitiativeContainer from './ContentInitiativeContainerTheme';
 import RabbitHoleDrawer from './RabbitHoleDrawerTheme';
 
+
+
+//base: true, // iphone
+//sm: true, // android
+//md: false, // ipad mini
+//lg: false, // ipad pro
+//xl: false, // macbook air
+//'2xl': false, // desktop
+
+
 const MenuCard = defineStyleConfig({
   baseStyle: {
     bg: "rush.50",
@@ -110,6 +120,14 @@ const QuestionButton = defineStyleConfig({
 })
 
 const theme = extendTheme({
+  breakpoints: {
+    base: '0px', // iphone SE
+    sm: '320px', // android
+    md: '480px', // ipad mini
+    lg: '600px', // ipad pro
+    xl: '768px', // macbook air
+    '2xl': '1280px', // desktop
+  },
   styles: {
     global: {
       'html, body': {

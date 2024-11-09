@@ -9,8 +9,7 @@ import {
   useBreakpointValue,
   useMultiStyleConfig,
 } from '@chakra-ui/react';
-import { FiInstagram, FiMessageSquare, FiHelpCircle } from 'react-icons/fi';
-//import LandingModalButton from './LandingModalButton';
+import { FiInstagram, FiMessageSquare, FiMap, FiHelpCircle } from 'react-icons/fi';
 import ShareModalButton from './ShareModalButton';
 
 export default function NavBar(props) {
@@ -24,12 +23,14 @@ export default function NavBar(props) {
   
   const navLabels = useBreakpointValue({
     base: {
+      home: 'Map',
       feedback: 'Feedback',
       social: '',
       share: '',
       about: '',
     },
     md: {
+      home: 'Map',
       feedback: 'Feedback',
       social: 'Instagram',
       share: 'Share',
@@ -45,6 +46,15 @@ export default function NavBar(props) {
       <Spacer />
       <Box __css={styles.buttons}>
         <ButtonGroup variant='nav' spacing='-2'>
+          <Link
+            href='/app'
+          >
+            <Button
+              aria-label='@nature_rnd Instagram'
+              leftIcon={<FiMap strokeWidth='inherit' />}
+              fontWeight='inherit'
+            >{navLabels?.home}</Button>
+          </Link>
           <Link 
             href='https://forms.gle/rB1WaaLcUmEjxmMr8'
             isExternal
