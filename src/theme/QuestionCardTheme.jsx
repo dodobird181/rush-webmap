@@ -1,5 +1,4 @@
 import { createMultiStyleConfigHelpers } from "@chakra-ui/styled-system"
-import { mobileStyle } from "./QuestionCardBarTheme"
 
 const helpers = createMultiStyleConfigHelpers([
   'card',
@@ -15,15 +14,14 @@ const QuestionCardTheme = helpers.defineMultiStyleConfig({
   baseStyle: {
     card: {
       pointerEvents: 'auto',
-      minWidth: mobileStyle('90%', '120px'),
-      minHeight: mobileStyle('120px', '100%'),
+      minWidth: '120px',
       borderRadius: 'xl',
       background: '#333',
-      alignSelf: 'center',
       // text styling
       color: 'white',
       // sticky
       position: 'sticky',
+      top: '3.75rem',
     },
     image: {
       width: '100%',
@@ -100,8 +98,8 @@ const QuestionCardTheme = helpers.defineMultiStyleConfig({
       card: {
         zIndex: '1000',
         height: '120px',
-        minWidth: mobileStyle('90%', '120px'),
-        maxWidth: mobileStyle('90%', '120px'),
+        minWidth: '320px',
+        maxWidth: '320px',
         color: 'black',
       },
       image: {

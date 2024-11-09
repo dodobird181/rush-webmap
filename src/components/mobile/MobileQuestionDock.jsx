@@ -34,21 +34,19 @@ export default function MobileQuestionDock ({isMobile, activeQuestion, mobileMen
     }
   };
 
-  console.log('should render: ' + shouldRender());
+  console.log('creating mobile question dock with active question: ' + activeQuestion);
   
   return shouldRender() && (
-    <Box>
+    <Box __css={styles.container}>
       <Text>awdawd</Text>
-      <Box __css={styles.container}>
-        <MobileQuestionCard
-          key={activeQuestion}
-          question={{key: activeQuestion, ...Questions.get(activeQuestion)}}
-          size={getCardSize()}
-          variant='sticky'
-          mobileMenuState={mobileMenuState}
-          setMobileMenuState={setMobileMenuState}
-        />
-      </Box>
+      <MobileQuestionCard
+        key={activeQuestion}
+        question={{key: activeQuestion, ...Questions.get(activeQuestion)}}
+        size={getCardSize()}
+        variant='sticky'
+        mobileMenuState={mobileMenuState}
+        setMobileMenuState={setMobileMenuState}
+      />
     </Box>
     
   )

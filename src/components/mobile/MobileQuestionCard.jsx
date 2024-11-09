@@ -26,11 +26,13 @@ export default function MobileQuestionCard({ question, size, variant, mobileMenu
     return {};
   };
   
+  // TODO: min and max sizing for mobile question cards in wide mode is mobileStyle('90%', '120px').
   const styles = useMultiStyleConfig('QuestionCard', { size, variant }); // re-use theme from original question card
   const dispatch = useActiveQuestionStore(state => state.dispatch);
 
   const onCardClick = () => {
     setMobileMenuState(MobileMenuState.COLLAPSED_HEADER);
+    dispatch({question: question.key, focus: questionActions.open});
   };
 
   
